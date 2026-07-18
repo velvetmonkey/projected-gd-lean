@@ -1,5 +1,6 @@
 # projected-gd-lean
 
+[![thread](https://img.shields.io/badge/%F0%9F%A7%B5-how%20it%20works-1DA1F2)](https://x.com/thevelvetmonke)
 [![Lean 4](https://img.shields.io/badge/Lean-4.28.0-blue)](https://lean-lang.org/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-v4.28.0-purple)](https://github.com/leanprover-community/mathlib4)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -12,7 +13,15 @@ Lean 4 formal proofs of projected gradient descent on a closed convex constraint
 
 **Zero sorry statements.** Standard axioms only (`propext`, `Classical.choice`, `Quot.sound`).
 
-## Why it matters
+## What this is, and why it matters
+
+This library formalizes projected gradient descent in a real Hilbert space. Its headline theorem, `ProjectedGD.pgd_convergence`, proves that among the first `k` iterates there is one whose function-value gap is at most `L*||x0-xstar||^2/(2*k)`.
+
+The geometric core is also checked. The metric projection onto a nonempty closed convex set is constructed and proved firmly nonexpansive. That fact, combined with a smooth-convex interpolation inequality, yields a per-step decrease in squared distance. Telescoping and averaging then give the O(1/k) best-iterate result.
+
+The interpolation inequality is assumed directly for the supplied function, gradient map, and target point; it is not derived in this repository from ordinary smoothness and convexity definitions. The target is assumed feasible, and the theorem does not separately prove its optimality. The conclusion selects some earlier iterate, not necessarily the last one, and the projection is noncomputable rather than an implemented solver.
+
+## Background and motivation
 
 Unconstrained gradient descent walks freely; *projected* gradient descent must stay inside a feasible set C — after each gradient step it projects back onto C with the metric (nearest-point) projection Π_C. The projection is what makes constrained optimisation tractable, and the entire convergence theory rests on one geometric fact: Π_C is **nonexpansive**, so projecting can only bring iterates closer to the optimum, never further. This library machine-checks that fact and rides it to the classical O(1/k) rate for smooth convex objectives.
 
